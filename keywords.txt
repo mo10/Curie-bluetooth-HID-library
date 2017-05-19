@@ -1,0 +1,56 @@
+#######################################
+# Syntax Coloring Map For CurieBLEKeyboard
+#######################################
+
+#######################################
+# Datatypes (KEYWORD1)
+#######################################
+BLEKeyboard	KEYWORD1
+
+#######################################
+# Methods and Functions (KEYWORD2)
+#######################################
+begin	      KEYWORD2
+write	      KEYWORD2
+press       KEYWORD2
+release     KEYWORD2
+releaseAll  KEYWORD2
+
+#######################################
+# Constants (LITERAL1)
+#######################################
+KEY_LEFT_CTRL     LITERAL1
+KEY_LEFT_SHIFT    LITERAL1
+KEY_LEFT_ALT      LITERAL1
+KEY_LEFT_GUI      LITERAL1
+KEY_RIGHT_CTRL    LITERAL1
+KEY_RIGHT_SHIFT   LITERAL1
+KEY_RIGHT_ALT     LITERAL1
+KEY_RIGHT_GUI     LITERAL1
+KEY_UP_ARROW      LITERAL1
+KEY_DOWN_ARROW    LITERAL1
+KEY_LEFT_ARROW    LITERAL1
+KEY_RIGHT_ARROW   LITERAL1
+KEY_BACKSPACE     LITERAL1
+KEY_TAB           LITERAL1
+KEY_RETURN        LITERAL1
+KEY_ESC           LITERAL1
+KEY_INSERT        LITERAL1
+KEY_DELETE        LITERAL1
+KEY_PAGE_UP       LITERAL1
+KEY_PAGE_DOWN     LITERAL1
+KEY_HOME          LITERAL1
+KEY_END           LITERAL1
+KEY_CAPS_LOCK     LITERAL1
+KEY_F1            LITERAL1
+KEY_F2            LITERAL1
+KEY_F3            LITERAL1
+KEY_F4            LITERAL1
+KEY_F5            LITERAL1
+KEY_F6            LITERAL1
+KEY_F7            LITERAL1
+KEY_F8            LITERAL1
+KEY_F9            LITERAL1
+KEY_F10           LITERAL1
+KEY_F11           LITERAL1
+KEY_F12           LITERAL1
