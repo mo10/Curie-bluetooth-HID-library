@@ -1,7 +1,7 @@
 #include "keyCode.h"
 #include "keyboard.h"
 
-const uint8_t  KeyboardReportDescriptor[76] = {
+unsigned char  KeyboardReportDescriptor[] = {
   0x05, 0x01,                         // Usage Page (Generic Desktop)
   0x09, 0x06,                         // Usage (Keyboard)
   0xA1, 0x01,                         // Collection (Application)
@@ -14,20 +14,6 @@ const uint8_t  KeyboardReportDescriptor[76] = {
   0x95, 0x08,                         //     Report Count (8)
   0x81, 0x02,                         //     Input (Data, Variable, Absolute)
 
-  0x95, 0x01,                         //     Report Count (1)
-  0x75, 0x08,                         //     Report Size (8)
-  0x81, 0x01,                         //     Input (Constant) reserved byte(1)
-
-  0x95, 0x05,                         //     Report Count (5)
-  0x75, 0x01,                         //     Report Size (1)
-  0x05, 0x08,                         //     Usage Page (Page# for LEDs)
-  0x19, 0x01,                         //     Usage Minimum (1)
-  0x29, 0x05,                         //     Usage Maximum (5)
-  0x91, 0x02,                         //     Output (Data, Variable, Absolute), Led report
-  0x95, 0x01,                         //     Report Count (1)
-  0x75, 0x03,                         //     Report Size (3)
-  0x91, 0x01,                         //     Output (Data, Variable, Absolute), Led report padding
-
   0x95, 0x06,                         //     Report Count (6)
   0x75, 0x08,                         //     Report Size (8)
   0x15, 0x00,                         //     Logical Minimum (0)
@@ -36,7 +22,6 @@ const uint8_t  KeyboardReportDescriptor[76] = {
   0x19, 0x00,                         //     Usage Minimum (0)
   0x29, 0x65,                         //     Usage Maximum (101)
   0x81, 0x00,                         //     Input (Data, Array) Key array(6 bytes)
-
 
   0x09, 0x05,                         //     Usage (Vendor Defined)
   0x15, 0x00,                         //     Logical Minimum (0)
@@ -192,13 +177,22 @@ BLEKeyboard::BLEKeyboard(){
   HIDInformation=new BLECharacteristic("2A4A", BLERead,4);
   HIDControlPoint=new BLEUnsignedCharCharacteristic("2A4C", BLEWriteWithoutResponse);
   ProtocolMode=new BLEUnsignedCharCharacteristic("2A4E", BLERead | BLEWriteWithoutResponse);
-  ReportMap=new BLECharacteristic("2A4B", BLERead,76);
+  ReportMap=new BLECharacteristic("2A4B", BLERead,sizeof(KeyboardReportDescriptor));
   //ReportOutput=new BLEUnsignedCharCharacteristic("2A4D", BLERead | BLENotify | BLEWrite | BLEWriteWithoutResponse);
   BootKeyboardInputReport=new BLECharacteristic("2A22", BLERead | BLENotify,8);
   BootKeyboardOutputReport=new BLEUnsignedCharCharacteristic("2A32", BLERead | BLEWrite | BLENotify);
+
+  memset(KeyboardReport, 0, sizeof(KeyboardReport));
 }
 void BLEKeyboard::begin(BLEPeripheral &BLEPer){
-  releaseAll();
+  /*
+  Set Appearance as Keyboard
+
+  But setAppearance does not work.
+  Fix setAppearance:https://github.com/01org/corelibs-arduino101/pull/493
+  About Appearance:https://www.bluetooth.com/specifications/gatt/viewer?attributeXmlFile=org.bluetooth.characteristic.gap.appearance.xml
+  */
+  BLEPer.setAppearance(961);
   // add service and characteristic:
   BLEPer.addAttribute(*Report);
   BLEPer.addAttribute(*HIDInformation);
@@ -211,24 +205,18 @@ void BLEKeyboard::begin(BLEPeripheral &BLEPer){
 
   ProtocolMode->setValue(1);
   //ReportOutput->setValue(0);
-  ReportMap->setValue(KeyboardReportDescriptor,76);
+  ReportMap->setValue(KeyboardReportDescriptor,sizeof(KeyboardReportDescriptor));
   BootKeyboardInputReport->setValue(KeyboardReport,8);
   BootKeyboardOutputReport->setValue(0);
   HIDInformation->setValue(HIDInfo,4);
 }
 void BLEKeyboard::releaseAll(void){
-  KeyboardReport[0] = 0;
-  KeyboardReport[1] = 0;
-  KeyboardReport[2] = 0;
-  KeyboardReport[3] = 0;
-  KeyboardReport[4] = 0;
-  KeyboardReport[5] = 0;
-  KeyboardReport[6] = 0;
-  KeyboardReport[7] = 0;
-  sendReport(KeyboardReport);
+  memset(KeyboardReport, 0, sizeof(KeyboardReport));
+  sendReport();
 }
-void BLEKeyboard::sendReport(uint8_t* keys){
-	Report->setValue(keys,8);
+void BLEKeyboard::sendReport(){
+  Report->setValue(KeyboardReport,8);
+  //while(Report->written());
 }
 size_t BLEKeyboard::press(uint8_t k){
 	uint8_t i;
@@ -266,7 +254,7 @@ size_t BLEKeyboard::press(uint8_t k){
 			return 0;
 		}
 	}
-	sendReport(KeyboardReport);
+	sendReport();
 	return 1;
 }
 size_t BLEKeyboard::release(uint8_t k){
@@ -295,10 +283,11 @@ size_t BLEKeyboard::release(uint8_t k){
 		}
 	}
 
-	sendReport(KeyboardReport);
+	sendReport();
 	return 1;
 }
 size_t BLEKeyboard::write(uint8_t c){
+  delay(50);
 	uint8_t p = press(c);  // Keydown
 	release(c);            // Keyup
 	return p;              // just return the result of press() since release() almost always returns 1

@@ -53,9 +53,9 @@ void loop() {
       if (currentMillis - previousMillis >= interval) {
         // save the last time
         previousMillis = currentMillis;
+
         Serial.println("Sending.");
         kbd.print("Hello ");
-        kbd.println(central.address());
         kbd.print(++counter);
         kbd.println(" times.");
       }

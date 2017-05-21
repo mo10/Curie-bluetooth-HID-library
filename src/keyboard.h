@@ -21,7 +21,7 @@ class BLEKeyboard:public Print{
     BLEUnsignedCharCharacteristic* ProtocolMode;
     //BLEUnsignedCharCharacteristic* ReportOutput;
     BLEUnsignedCharCharacteristic* BootKeyboardOutputReport;
-    void sendReport(uint8_t* keys);
+    void sendReport();
 
 };
 
