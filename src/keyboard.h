@@ -1,6 +1,7 @@
 #ifndef BLEKEYBOARD_H
 #define BLEKEYBOARD_H
 #include <CurieBLE.h>
+#include "keyCode.h"
 
 class BLEKeyboard:public Print{
   public:
