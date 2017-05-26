@@ -7,4 +7,4 @@ A library turn Curie Core boards(Arduino/Genuino 101) into a Bluetooth Keyboard/
 
 Bluetooth Keyboard: 85% (Now available)
 
-Bluetooth Keyboard: 50% (unavailable)
+Bluetooth Mouse: 50% (unavailable)
