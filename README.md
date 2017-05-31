@@ -5,6 +5,6 @@ A library turn Curie Core boards(Arduino/Genuino 101) into a Bluetooth Keyboard/
 
 ## 目前进度 Project progress
 
-Bluetooth Keyboard: 85% (Now available)
+Bluetooth Keyboard: 85% (available) unstabitily
 
-Bluetooth Mouse: 50% (unavailable)
+Bluetooth Mouse: 85% (available) unstabitily
